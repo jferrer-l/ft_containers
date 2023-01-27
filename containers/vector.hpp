@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 18:06:06 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/01/26 02:23:20 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/01/27 20:11:25 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ public:
 	typedef typename allocator_type::pointer			pointer;
 	typedef typename allocator_type::const_pointer		const_pointer;
 
-	typedef MyIterator<vector, T>								iterator;
-	//typedef implementation-defined						const_iterator;
+	typedef ft::iterator<vector, T>						iterator;
+	typedef ft::iterator<vector const, T const>			const_iterator;
 
 	// typedef std::reverse_iterator<iterator>		reverse_iterator;
 	// typedef std::reverse_iterator<const_iterator>		const_reverse_iterator;
@@ -123,14 +123,22 @@ public:
 	}
 
 	//template <T>
-	typename std::vector<T>::iterator begin()
+	iterator begin()
 	{
-		return (this->_vector);
+		return (iterator(this->_vector));
+	}
+	const_iterator begin() const
+	{
+		return (const_iterator(this->_vector));
 	}
 
-	pointer end()
+	iterator end()
 	{
-		return (&(_vector[_capacity]));
+		return (iterator(&(_vector[_size])));
+	}
+	const_iterator end() const
+	{
+		return (const_iterator(&(_vector[_size])));
 	}
 
 	// template <typename T>

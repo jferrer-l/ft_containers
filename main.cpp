@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:55:01 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/01/26 02:24:39 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/01/27 23:22:35 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 //#include "containers/iterator.hpp"
 #include <vector>
 #include <iterator>
+#include <cassert>
+// #include <gtest/gtest.h>
 //#include "vector_iterator.hpp"
 
-int	test_iterator_0a();
+int	test_iterator();
 int	test_iterator_0b();
 
 // template<typename T>
@@ -66,10 +68,15 @@ int main()
 	ft::vector<int>		myvec(ovec.begin(), ovec.end());
 	ft::vector<int>		myvec2(myvec);
 
-	ft::vector<int>::iterator it;
-	
-
-	test_iterator_0a();
+	// ft::vector<int>::iterator *it;
+	// ft::iterator_traits<ft::vector<int>::iterator>::iterator_category temp;
+	//static_assert(std::is_same_v<ft::iterator_traits<ft::vector<int>::iterator>::iterator_category, std::random_access_iterator_tag>>);
+	static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>::iterator_category, std::random_access_iterator_tag>::value, "va");
+	//ft::iterator<ft::vector<int>, int > it900;
+	// std::iterator<std::vector<int> , int > it5;
+	// std::iterator<
+	// ft::iterator<
+	test_iterator();
 	//test_iterator_0b();
 	
 	//std::vector<int>::iterator temp = myvec2.begin();
@@ -85,28 +92,84 @@ int main()
 	return 0;
 }
 
-int	test_iterator_0a()
+int	test_iterator()
 {
 
-	// //ft::vector<int>::iterator va;
-	// //fd::iterator<ft::vector<int> >  it2;
-	// //fd::iterator<ft::vector<int> >  it;
-	// ft::vector<int>::iterator it;
-	// ft::iterator<ft::vector<int> >  it2;
-	// //std::iterator<std::random_access_iterator_tag, int> it3;
-	// std::vector<int>::iterator it3;
-	// std::cout << it.base() << std::endl;
-	// it++;
-	// std::cout << it.base() << std::endl;
+	// std::vector<int> container0 {1, 2, 3, 4, 5, 6, 7, 8, 9};
+	// std::vector<int> container1 {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-	// std::cout << it2.base() << std::endl;
-	// it2++;
-	// std::cout << it2.base() << std::endl;
+	//std::iterator<std::vector<int>, int> it0;
+	//it0 = container0.begin();
 
-	// std::cout << it3.base() << std::endl;
-	// it3++;
-	// std::cout << it3.base() << std::endl;
+	// std::vector<int>::iterator it0 = container0.begin();
+	//std::vector<int>::ft::iterator 
 
+
+	// (void)it0;
+	//(void)it1;
+	std::cout << "Default constructor test:" << std::endl;
+	{
+		//it0.begin();
+		//assert(it0 == it2);
+	}
+	std::cout << "Pointer constructor test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Copy constructor test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Copy assignment operator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Dereference operator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Arrow operator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Pre-increment operator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Post-increment operator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Equality operator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Inequality operator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Less than operator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Random access test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Conversion to const iterator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Input iterator test:" << std::endl;
+	{
+		
+	}
+	std::cout << "Output iterator test:" << std::endl;
+	{
+		
+	}
+	
+	
 
 	//MyContainer<int>::iterator it;
 
