@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:55:01 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/01/27 23:22:35 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/01/30 03:22:24 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 //#include "containers/iterator.hpp"
 #include <vector>
 #include <iterator>
-#include <cassert>
+
+#include "tests/tests.hpp"
+
 // #include <gtest/gtest.h>
 //#include "vector_iterator.hpp"
 
@@ -63,34 +65,104 @@ int	test_iterator_0b();
 int main()
 {
 	{
-	std::vector<int>	ovec(4, 6);
-	std::vector<int>	ovec2(ovec.begin(), ovec.end());
-	ft::vector<int>		myvec(ovec.begin(), ovec.end());
-	ft::vector<int>		myvec2(myvec);
 
-	// ft::vector<int>::iterator *it;
-	// ft::iterator_traits<ft::vector<int>::iterator>::iterator_category temp;
-	//static_assert(std::is_same_v<ft::iterator_traits<ft::vector<int>::iterator>::iterator_category, std::random_access_iterator_tag>>);
-	static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>::iterator_category, std::random_access_iterator_tag>::value, "va");
-	//ft::iterator<ft::vector<int>, int > it900;
-	// std::iterator<std::vector<int> , int > it5;
-	// std::iterator<
-	// ft::iterator<
-	test_iterator();
-	//test_iterator_0b();
-	
-	//std::vector<int>::iterator temp = myvec2.begin();
+		std::vector<int>	tvec;
 
-	// for (; temp != myvec2.end(); *temp++)
-	// 	std::cerr << *temp << std::endl;
+		std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
+		tvec.push_back(1);
+		std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
+		tvec.resize(24, 1);
+		std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
+		tvec.resize(12, 2);
+		std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
+		tvec.reserve(100);
+		std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
+		tvec.reserve(10);
+		std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
+		
+		ptrdiff_t dist = std::distance(tvec.end(), tvec.begin());
 
-	std::cout << ovec2[0] << std::endl;
-	ovec2[0] = 9;
-	std::cout << ovec[0] << std::endl;
+		std::cout << "distance = " << dist << std::endl;
+
+		std::vector<int> tvec2(tvec.begin(), tvec.begin() + 1);
+
+		std::vector<int>::iterator first = tvec.begin();
+		std::vector<int>::iterator last = tvec.end();
+
+		std::cout << "capacity2 = " << tvec2.capacity() << " size2 = " << tvec2.size() << std::endl;
+		ft::vector<int> tempvec(tvec.begin(), tvec.end());
+		std::cout << "capacity2 = " << tempvec.capacity() << " size2 = " << tempvec.size() << std::endl;
+
+		size_t dist2 = std::distance(first, last);
+
+		size_t i = 0;
+		for (; i < dist2 && first != last; ++first, ++i) {}
+		std::cout << "result = " << (i == dist2) << std::endl;
+		std::cout << "distance2 = " << dist2 << std::endl;
+
+
+		std::cout << "capacity = " << tvec2.capacity() << " size = " << tvec2.size() << std::endl;
+
+		std::vector<int>	ovec(4, 6);
+		std::vector<int>	ovec2(ovec.begin(), ovec.end());
+		ft::vector<int>		myvec(ovec.begin(), ovec.end());
+		ft::vector<int>		myvec2(myvec);
+
+
+		std::vector<std::vector<int> >		ovec3;
+		ft::vector<std::vector<int> >		myvec3;
+
+		std::cout << typeid(std::vector<char>::size_type).name() << std::endl;
+		std::cout << typeid(ft::vector<char>::size_type).name() << std::endl;
+		std::cout << "max size: " << ovec.max_size() << std::endl;
+		std::cout << "max size: " << ovec3.max_size() << std::endl;
+
+		std::cout << "max size: " << myvec.max_size() << std::endl;
+		std::cout << "max size: " << myvec3.max_size() << std::endl;
+		
+
+		// ft::iterator<std::random_access_iterator_tag, int> it1;
+
+		// std::iterator<std::random_access_iterator_tag, int> it2;
+
+		//ft::vector<int>::iterator **it3;
+
+		//static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>, ft::iterator_traits<ft::iterator<std::random_access_iterator_tag, int> >::iterator_category>::value, "temp");
+
+		test_reverse_iterator();
+		test_iterator_traits_categories();
+		test_iterator_constructors();
+
+		static_assert(std::is_same<ft::iterator<std::random_access_iterator_tag, int>::iterator_category, std::iterator<std::random_access_iterator_tag, int>::iterator_category>::value, "failed iterator_category");
+
+		// ft::vector<int>::iterator *it;
+		// ft::iterator_traits<ft::vector<int>::iterator>::iterator_category temp;
+		//static_assert(std::is_same_v<ft::iterator_traits<ft::vector<int>::iterator>::iterator_category, std::random_access_iterator_tag>>);
+		static_assert(std::is_same<ft::iterator_traits<ft::iterator<std::random_access_iterator_tag, int> >::iterator_category, std::random_access_iterator_tag>::value, "failed iterator_category");
+		static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>::difference_type, ptrdiff_t>::value, "failed difference_type");
+		//static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>::value_type, int>::value, "failed difference_type");
+
+		//ft::iterator<ft::vector<int>, int > it900;
+		// std::iterator<std::vector<int> , int > it5;
+		// std::iterator<
+		// ft::iterator<
+		test_iterator();
+		//test_iterator_0b();
+		
+		//std::vector<int>::iterator temp = myvec2.begin();
+
+		// for (; temp != myvec2.end(); *temp++)
+		// 	std::cerr << *temp << std::endl;
+
+		std::cout << ovec2[0] << std::endl;
+		ovec2[0] = 9;
+		std::cout << ovec[0] << std::endl;
 	}
 	//system("leaks exec");
 	return 0;
 }
+
+
 
 int	test_iterator()
 {
@@ -186,3 +258,4 @@ int	test_iterator()
 
 // 	return 0;
 // }
+

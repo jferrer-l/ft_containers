@@ -1,11 +1,12 @@
-SRCS =  main.cpp
+SRCS =  main.cpp tests/iterator_tests.cpp tests/vector_tests.cpp tests/test_utils.cpp
 
 
 OBJS = ${SRCS:.cpp=.o}
 DEPS = ${SRCS:.cpp=.d}
 CPP = c++
 RM = rm -f
-CPPFLAGS =  -Wall -Werror -Wextra -std=c++98 -fsanitize=address -MMD
+CPPFLAGS =  -Wall -Werror -Wextra -std=c++98
+# -fsanitize=address -MMD
 HEADER = containers/vector.hpp
 NAME = exec
 

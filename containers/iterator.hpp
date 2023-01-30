@@ -6,16 +6,13 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 18:38:55 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/01/27 21:31:47 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/01/30 04:42:49 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_HPP
 #define ITERATOR_HPP
 
-// #include <iterator>
-// #include <memory>
-// #include <cstddef>
 #include <type_traits>
 #include <cstddef>
 
@@ -23,45 +20,68 @@
 namespace ft
 {
 
-template<typename _Category, typename _Tp, typename _Distance = ptrdiff_t, typename _Pointer = _Tp *, typename _Reference = _Tp &>
+template <typename iterator> struct iterator_traits;
+template<typename T> struct iterator_traits<T*>;
+template<class T> struct iterator_traits<const T*>;
+
+/*
+namespace std {
+	template<class Category, class T, class Distance = ptrdiff_t,
+				class Pointer = T*, class Reference = T&>
+	struct iterator {
+		typedef T			value_type;
+		typedef Distance	difference_type;
+		typedef Pointer		pointer;
+		typedef Reference 	reference;
+		typedef Category 	iterator_category;
+	}; 
+}
+*/
+
+
+template<class _Category, class _Tp, class _Distance = ptrdiff_t, class _Pointer = _Tp *, class _Reference = _Tp &>
 class iterator
 {
 	public:
-		typedef _Category									value_type;
-		typedef _Category*									pointer;
-		typedef const _Category*							const_pointer;
-		typedef _Category&									reference;
-		typedef const _Category&							const_reference;
-		typedef ptrdiff_t									difference_type; // usually as long as an int
-		typedef std::random_access_iterator_tag				iterator_category;
-		typedef iterator< const _Category, const _Tp>		const_iterator;
+		typedef _Tp										value_type;
+		typedef _Pointer								pointer;
+		typedef const _Pointer							const_pointer;
+		typedef _Reference								reference;
+		typedef const _Reference						const_reference;
+		typedef _Distance								difference_type; // usually as long as an int
+		typedef _Category								iterator_category;
+		//typedef iterator< const _Category, const _Tp>	const_iterator;
 	
 
 
-		iterator(): _it(){}
-		iterator(pointer ptr): _it(ptr){}
+		//iterator(): _it(){}
+		iterator(pointer ptr = NULL): _it(ptr){}
 		iterator(const iterator& newit): _it(newit._it){}
-		~iterator(){}
+		virtual ~iterator(){}
 
 		pointer				base	() const { return _it; }
 
 		iterator			operator	=	(const iterator& r)				{ _it = r.base(); return *this; };
 		iterator&			operator	++	()								{ _it += 1; return *this; }
-		iterator			operator	++	(int)							{ _it += 1; iterator tmp(*this); operator++(); return tmp; }
+		iterator			operator	++	(int)							{ iterator tmp(*this); operator++(); return tmp; }
 		iterator&			operator	--	()								{ _it -= 1; return *this; }
-		iterator			operator	--	(int)							{ _it -= 1; iterator tmp(*this); operator--(); return tmp; }
-		iterator&			operator	+=	(difference_type tmp)					{_it += tmp; return *this; }
-		iterator&			operator	-=	(difference_type tmp)					{_it -= tmp; return *this; }
-		iterator			operator	+	(difference_type tmp)					{ return (base() + tmp); }
-		iterator			operator	-	(difference_type tmp)					{ return (base() - tmp); }
+		iterator			operator	--	(int)							{ iterator tmp(*this); operator--(); return tmp; }
+		iterator&			operator	+=	(difference_type tmp)			{ _it += tmp; return *this; }
+		iterator&			operator	-=	(difference_type tmp)			{ _it -= tmp; return *this; }
+		iterator			operator	+	(difference_type tmp)			{ return (base() + tmp); }
+		iterator			operator	-	(difference_type tmp)			{ return (base() - tmp); }
 
-		reference			operator	[]	(difference_type index)				{ return base()[index]; }
-		const_reference		operator	[]	(difference_type index) const			{ return base()[index]; }
+		int		operator-(iterator const &obj) const 						{ return _it - obj._it; }
+		int		operator+(iterator const &obj) const 						{ return _it + obj._it; }
+
+		reference			operator	[]	(difference_type index)			{ return *this->_it[index]; }
+		//const_reference		operator	[]	(difference_type index) const	{ return base()[index]; }
 
 		reference			operator	*	()								{ return *_it; }
-		const_reference		operator	*	() const						{ return *_it; }
+		//const_reference		operator	*	() const						{ return *_it; }
 		pointer				operator	->	()								{ return &(*_it); }
-		const_pointer		operator	->	() const						{ return &(*_it); }
+		//const_pointer		operator	->	() const						{ return &(*_it); }
+		
 
 		bool				operator	==	(const iterator& other) const	{ return _it == other._it; }
 		bool				operator	!=	(const iterator& other) const	{ return !(*this == other); }
@@ -70,6 +90,8 @@ class iterator
 		bool				operator	>=	(const iterator& other) const	{ return _it >= other._it; }
 		bool				operator	<=	(const iterator& other) const	{ return _it <= other._it; }
 
+		//operator 			const_iterator	() const						{ return const_iterator(_it); };
+
 
 	private:
 		pointer	_it;
@@ -77,204 +99,153 @@ class iterator
 };
 
 
-template <typename iterator>
-struct iterator_traits
+template <class iterator>
+class reverse_iterator: public ft::iterator<typename ft::iterator_traits<iterator>::iterator_category,
+											typename ft::iterator_traits<iterator>::value_type,
+											typename ft::iterator_traits<iterator>::difference_type,
+											typename ft::iterator_traits<iterator>::pointer,
+											typename ft::iterator_traits<iterator>::reference>
 {
-  typedef typename iterator::difference_type difference_type;
-  typedef typename iterator::value_type value_type;
-  typedef typename iterator::pointer pointer;
-  typedef typename iterator::reference reference;
-  typedef typename iterator::iterator_category iterator_category;
+	protected:
+		iterator _it;
+
+	public:
+		typedef iterator 												iterator_type;
+		typedef typename ft::iterator_traits<iterator>::difference_type	difference_type;
+		typedef typename ft::iterator_traits<iterator>::reference		reference;
+		typedef typename ft::iterator_traits<iterator>::pointer			pointer;
+
+		// typedef typename iterator::difference_type		difference_type;
+		// typedef typename iterator::value_type			value_type;
+		// typedef typename iterator::pointer				pointer;
+		// typedef typename iterator::const_pointer		const_pointer;
+		// typedef typename iterator::reference			reference;
+		// typedef typename iterator::const_reference		const_reference;
+		// typedef typename iterator::iterator_category	iterator_category;
+
+		reverse_iterator(): _it(){}
+		explicit reverse_iterator(iterator x): _it(x) {}
+		template <class U>
+			reverse_iterator(const reverse_iterator<U>& u): _it(u._it) {}
+
+		// reverse_iterator(iterator const &it): _it(it) {}
+		// reverse_iterator(reverse_iterator const &it): _it(it._it) {}
+
+		iterator					base() const { return _it; }
+		reference					operator	*	()								{ iterator tmp = _it; return *--_it; }
+		pointer						operator	->	()								{ return &(operator*()); }
+
+		reverse_iterator&			operator	++	()								{ --_it; return *this; }
+		reverse_iterator			operator	++	(int)							{ reverse_iterator tmp(*this); --_it; return tmp; }
+		reverse_iterator&			operator	--	()								{ ++_it; return *this; }
+		reverse_iterator			operator	--	(int)							{ reverse_iterator tmp(*this); ++_it; return tmp; }
+
+		reverse_iterator			operator	+	(difference_type tmp) const		{ return reverse_iterator(_it - tmp); }
+		reverse_iterator&			operator	+=	(difference_type tmp)			{ _it -= tmp; return *this; }
+		reverse_iterator			operator	-	(difference_type tmp) const		{ return reverse_iterator(_it + tmp); }
+		reverse_iterator&			operator	-=	(difference_type tmp)			{ _it += tmp; return *this; }
+
+		reference					operator	[]	(difference_type tmp)		 	{ return  base()[-tmp - 1]; };
+
+		// reverse_iterator&			operator	=	(reverse_iterator const &other) { this->_it = other._it; return *this; }
+		// reference					operator	[]	(difference_type tmp) const 	{ return  base()[-tmp - 1]; };
+		// const_reference				operator	*	() const						{ iterator tmp = _it; return *--_it; }
+		// const_pointer				operator	->	() const						{ return &(operator*()); }
+
 };
 
-template<typename T>
-struct iterator_traits<T*> {
-    typedef T value_type;
-    typedef ptrdiff_t difference_type;
-    typedef T* pointer;
-    typedef T& reference;
-    typedef std::random_access_iterator_tag iterator_category;
+template <class iterator>
+bool operator==(const reverse_iterator<iterator>& lhs, const reverse_iterator<iterator>& rhs) {
+    return lhs.base() == rhs.base();
+}
+
+template <class iterator>
+bool operator<(const reverse_iterator<iterator>& lhs, const reverse_iterator<iterator>& rhs) {
+    return lhs.base() < rhs.base();
+}
+
+template <class iterator>
+bool operator!=(const reverse_iterator<iterator>& lhs, const reverse_iterator<iterator>& rhs) {
+    return !(lhs == rhs);
+}
+
+template <class iterator>
+bool operator>(const reverse_iterator<iterator>& lhs, const reverse_iterator<iterator>& rhs) {
+    return rhs < lhs;
+}
+
+template <class iterator>
+bool operator>=(const reverse_iterator<iterator>& lhs, const reverse_iterator<iterator>& rhs) { 
+    return !(lhs < rhs);
+}
+
+template <class iterator>
+bool operator<=(const reverse_iterator<iterator>& lhs, const reverse_iterator<iterator>& rhs) {
+    return !(rhs < lhs);
+}
+
+template <class iterator>
+typename reverse_iterator<iterator>::difference_type operator-(const reverse_iterator<iterator>& x, const reverse_iterator<iterator>& y) {
+	return (x.base() - y.base());
+}
+
+template <class iterator>
+reverse_iterator<iterator> operator+(typename reverse_iterator<iterator>::difference_type n, const reverse_iterator<iterator>& x) {
+	return (x.base() - n);
+}
+
+
+
+
+
+
+/*--------------------------------------------------------------------------------------*
+			Iterator categories for iterator_traits (since C++20)
+
+	struct input_iterator_tag { };													(1)
+
+	struct output_iterator_tag { };													(2)
+
+	struct forward_iterator_tag : public input_iterator_tag { };					(3)
+
+	struct bidirectional_iterator_tag : public forward_iterator_tag { };			(4)
+
+	struct random_access_iterator_tag : public bidirectional_iterator_tag { };		(5)
+
+	struct contiguous_iterator_tag : public random_access_iterator_tag { };			(6)
+
+*--------------------------------------------------------------------------------------*/
+
+template <class iterator>
+struct iterator_traits
+{
+  typedef typename iterator::difference_type	difference_type;
+  typedef typename iterator::value_type			value_type;
+  typedef typename iterator::pointer			pointer;
+  typedef typename iterator::reference			reference;
+  typedef typename iterator::iterator_category	iterator_category;
+};
+
+template<class T>
+struct iterator_traits<T*>
+{
+    typedef ptrdiff_t							difference_type;
+    typedef T									value_type;
+    typedef T*									pointer;
+    typedef T&									reference;
+    typedef std::random_access_iterator_tag		iterator_category;
+};
+
+template<class T>
+struct iterator_traits<const T*>
+{
+	typedef ptrdiff_t						difference_type;
+	typedef T								value_type;
+	typedef const T*						pointer;
+	typedef const T&						reference;
+	typedef std::random_access_iterator_tag	iterator_category;
 };
 
 };
 
 #endif
-
-// template<typename C, typename ValueType>
-// struct MyIterator {
-// 	typedef C									value_type;
-// 	typedef C*									pointer;
-// 	typedef const C*							const_pointer;
-// 	typedef C&									reference;
-// 	typedef const C&							const_reference;
-// 	typedef std::ptrdiff_t						difference_type; // usually as long as an int
-// 	typedef std::random_access_iterator_tag		iterator_category;
-// 	//typedef iterator< const C >					const_iterator;
-
-// 	// using iterator_category = std::random_access_iterator_tag;  // specify the iterator category
-// 	// using value_type = ValueType; 
-// 	// using difference_type = std::ptrdiff_t;
-// 	// using pointer = ValueType*;
-// 	// using reference = ValueType&;
-
-	
-// 	MyIterator& operator++(){
-// 		// implementation here
-// 		return *this;
-// 	}
-// 	MyIterator& operator--(){
-// 		// implementation here
-// 		return *this;
-// 	}
-// 	ValueType& operator*(){
-// 		// implementation here
-// 		return *p;
-// 	}
-// 	ValueType* operator->(){
-// 		// implementation here
-// 		return p;
-// 	}
-// 	MyIterator& operator+=(difference_type n){
-// 		(void)n;
-// 		// implementation here
-// 		return *this;
-// 	}
-// 	MyIterator& operator-=(difference_type n){
-// 		(void)n;
-// 		// implementation here
-// 		return *this;
-// 	}
-// 	ValueType& operator[](difference_type n){
-// 		(void)n;
-
-// 		return *this;
-// 	}
-// 	private:
-// 		pointer p;
-// };
-
-// template<typename Container, typename ValueType>
-// MyIterator& MyIterator<Container, ValueType>::operator++() {
-//     // implementation here
-//     return *this;
-// }
-// template<typename Container, typename ValueType>
-// MyIterator& MyIterator<Container, ValueType>::operator--() {
-//     // implementation here
-//     return *this;
-// }
-// template<typename Container, typename ValueType>
-// ValueType& MyIterator<Container, ValueType>::operator*() {
-//     // implementation here
-//     return *p;
-// }
-// template<typename Container, typename ValueType>
-// ValueType* MyIterator<Container, ValueType>::operator->() {
-//     // implementation here
-//     return p;
-// }
-// template<typename Container, typename ValueType>
-// MyIterator& MyIterator<Container, ValueType>::operator+=(difference_type n) {
-//     // implementation here
-//     return *this;
-// }
-// template<typename Container, typename ValueType>
-// MyIterator& MyIterator<Container, ValueType>::operator-=(difference_type n) {
-//     // implementation here
-//     return *this;
-// }
-
-// template<typename IteratorCategory, typename T>
-// struct MyIterator : public std::iterator<IteratorCategory, T>
-// {
-//     // constructor
-//     MyIterator(MyContainer<T>* container, int index) : m_container(container), m_index(index) {}
-//     // overload the increment operator
-//     MyIterator& operator++() {
-//         ++m_index;
-//         return *this;
-//     }
-//     // overload the dereference operator
-//     T& operator*() {
-//         return m_container->getElement(m_index);
-//     }
-//     // overload the comparison operators
-//     bool operator==(const MyIterator& other) {
-//         return m_index == other.m_index;
-//     }
-//     bool operator!=(const MyIterator& other) {
-//         return !(*this == other);
-//     }
-//     private:
-//         MyContainer<T>* m_container;
-//         int m_index;
-// };
-
-// using iterator = MyIterator<std::random_access_iterator_tag, T>;
-// iterator begin() { return iterator(this, 0); }
-// iterator end() { return iterator(this, size()); }
-
-// template <typename T>
-// class MyContainer {
-//     public:
-//         T getElement(int index) { /* ... */ }
-//         int size() {/*...*/}
-
-//         template <typename IteratorCategory>
-//         struct iterator {
-//             // constructor
-//             iterator(MyContainer* container, int index) : m_container(container), m_index(index) {}
-
-//             // overload the increment operator
-//             iterator& operator++() {
-//                 ++m_index;
-//                 return *this;
-//             }
-
-//             // overload the dereference operator
-//             T& operator*() {
-//                 return m_container->getElement(m_index);
-//             }
-
-//             // overload the comparison operators
-//             bool operator==(const iterator& other) {
-//                 return m_index == other.m_index;
-//             }
-//             bool operator!=(const iterator& other) {
-//                 return !(*this == other);
-//             }
-//             private:
-//                 MyContainer* m_container;
-//                 int m_index;
-//         };
-
-//         iterator<std::random_access_iterator_tag> begin() { return iterator<std::random_access_iterator_tag>(this, 0); }
-//         iterator<std::random
-
-
-
-// // iterator.h
-// template <typename T>
-// struct MyIterator {
-//     // constructor
-//     MyIterator(MyContainer<T>* container, int index) : m_container(container), m_index(index) {}
-//     // overload the increment operator
-//     MyIterator& operator++() {
-//         ++m_index;
-//         return *this;
-//     }
-//     // overload the dereference operator
-//     T& operator*() {
-//         return m_container->getElement(m_index);
-//     }
-//     // overload the comparison operators
-//     bool operator==(const MyIterator& other) {
-//         return m_index == other.m_index;
-//     }
-//     bool operator!=(const MyIterator& other) {
-//         return !(*this == other);
-//     }
-//     private:
-//         MyContainer<T>* m_container;
-//         int m_index;
-// };
