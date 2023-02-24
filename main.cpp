@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:55:01 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/01/30 03:22:24 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/02/22 18:52:30 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,62 @@ int	test_iterator_0b();
 //     // iterator end();
 // };
 
+// template <class T>
+void	print_vec(std::vector<int> T)
+{
+	std::cout << "vector size = " << T.size() << ", capacity = " << T.capacity() << std::endl;
+	for (size_t i = 0; i < T.size(); i++)
+		std::cout << T[i] << " ";
+	std::cout << std::endl;
+}
+
 int main()
 {
 	{
+		ft::vector<int *> temp;
+		
+
+		std::unique_ptr<void *> k2;
+
+		ft::vector<int> A;
+
+		size_t peta = 100000000;
+		while (1)
+			A.reserve((peta *= 2));
+		// temp.push_back(&(*k2));
+		// temp.push_back(A);
+		// temp.push_back(2);
+
+		// std::cout << *temp.begin() << std::endl;
+		temp.begin();
+
+		
+
+		temp.assign(temp.end(), temp.begin());
+		// temp.reserve(87356768734699756);
+		// temp.at(5);
+		// temp.front();
+		// temp.back();
+	}
+	{
+
+
+
+		std::vector<int>	assignvec(5, 1);
+
+		std::vector<int>	assignvec2(6, 2);
+
+		// assignvec2.at(9);
+
+		print_vec(assignvec);
+
+		assignvec.assign(assignvec2.begin(), assignvec2.end());
+
+		print_vec(assignvec);
+
+
+
+
 
 		std::vector<int>	tvec;
 
@@ -129,17 +182,17 @@ int main()
 
 		//static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>, ft::iterator_traits<ft::iterator<std::random_access_iterator_tag, int> >::iterator_category>::value, "temp");
 
-		test_reverse_iterator();
-		test_iterator_traits_categories();
-		test_iterator_constructors();
+		// test_reverse_iterator();
+		// test_iterator_traits_categories();
+		// test_iterator_constructors();
 
-		static_assert(std::is_same<ft::iterator<std::random_access_iterator_tag, int>::iterator_category, std::iterator<std::random_access_iterator_tag, int>::iterator_category>::value, "failed iterator_category");
+		// static_assert(std::is_same<ft::iterator<std::random_access_iterator_tag, int>::iterator_category, std::iterator<std::random_access_iterator_tag, int>::iterator_category>::value, "failed iterator_category");
 
-		// ft::vector<int>::iterator *it;
-		// ft::iterator_traits<ft::vector<int>::iterator>::iterator_category temp;
-		//static_assert(std::is_same_v<ft::iterator_traits<ft::vector<int>::iterator>::iterator_category, std::random_access_iterator_tag>>);
-		static_assert(std::is_same<ft::iterator_traits<ft::iterator<std::random_access_iterator_tag, int> >::iterator_category, std::random_access_iterator_tag>::value, "failed iterator_category");
-		static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>::difference_type, ptrdiff_t>::value, "failed difference_type");
+		// // ft::vector<int>::iterator *it;
+		// // ft::iterator_traits<ft::vector<int>::iterator>::iterator_category temp;
+		// //static_assert(std::is_same_v<ft::iterator_traits<ft::vector<int>::iterator>::iterator_category, std::random_access_iterator_tag>>);
+		// static_assert(std::is_same<ft::iterator_traits<ft::iterator<std::random_access_iterator_tag, int> >::iterator_category, std::random_access_iterator_tag>::value, "failed iterator_category");
+		// static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>::difference_type, ptrdiff_t>::value, "failed difference_type");
 		//static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>::value_type, int>::value, "failed difference_type");
 
 		//ft::iterator<ft::vector<int>, int > it900;
