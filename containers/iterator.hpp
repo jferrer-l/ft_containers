@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 18:38:55 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/02/24 11:40:46 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/02/28 14:57:17 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,13 +276,17 @@ class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::pointer               pointer;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::reference             reference;
 
-		T* _node;
+		T*		_node;
+		Compare	comp;
+		T*		_last_node;
 
-		BST_iterator(): _node(nullptr)
+		// BST_iterator(): _node(nullptr)
+		// {}
+		BST_iterator(T* node, T* last_node, const Compare& com = Compare()): _node(node), _last_node(last_node), comp(com)
 		{}
-		BST_iterator(T* node): _node(node)
+		BST_iterator(const BST_iterator& _iterator): _node(_iterator._node), _last_node(_iterator._last_node), comp(_iterator.comp)
 		{}
-		BST_iterator(const BST_iterator& _iterator): _node(_iterator._node)
+		BST_iterator(const Compare& com = Compare()): _node(), _last_node(), comp(com)
 		{}
 
 		BST_iterator &operator=(const BST_iterator& _iterator)
@@ -290,6 +294,8 @@ class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 			if (*this == _iterator)
 				return *this;
 			_node = _iterator._node;
+			_last_node = _iterator._last_node;
+			comp = _iterator.comp;
 			return *this;
 		}
 
@@ -317,25 +323,25 @@ class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 
 		BST_iterator& operator++()
 		{
-			if (_node->right != nullptr)
+			if (_node->right != _last_node)
 			{
 				_node = _node->right;
-				while (_node->left != nullptr)
+				while (_node->left != _last_node)
 					_node = _node->left;
 			}
-			else if (_node->parent != nullptr && _node == _node->parent->left)
+			else if (_node->parent != _last_node && _node == _node->parent->left)
 				_node = _node->parent;
-			else if (_node->parent != nullptr && _node == _node->parent->right)
+			else if (_node->parent != _last_node && _node == _node->parent->right)
 			{
-				while (_node->parent != nullptr && _node == _node->parent->right)
+				while (_node->parent != _last_node && _node == _node->parent->right)
 					_node = _node->parent;
-				if (_node->parent != nullptr)
+				if (_node->parent != _last_node)
 					_node = _node->parent;
 				else
-					_node = nullptr;
+					_node = _last_node;
 			}
 			else
-				_node = nullptr;
+				_node = _last_node;
 			return *this;
 		}
 
@@ -348,25 +354,25 @@ class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 
 		BST_iterator& operator--()
 		{
-			if (_node->left != nullptr)
+			if (_node->left != _last_node)
 			{
 				_node = _node->left;
-				while (_node->right != nullptr)
+				while (_node->right != _last_node)
 					_node = _node->right;
 			}
-			else if (_node->parent != nullptr && _node == _node->parent->right)
+			else if (_node->parent != _last_node && _node == _node->parent->right)
 				_node = _node->parent;
-			else if (_node->parent != nullptr && _node == _node->parent->left)
+			else if (_node->parent != _last_node && _node == _node->parent->left)
 			{
-				while (_node->parent != nullptr && _node == _node->parent->left)
+				while (_node->parent != _last_node && _node == _node->parent->left)
 					_node = _node->parent;
-				if (_node->parent != nullptr)
+				if (_node->parent != _last_node)
 					_node = _node->parent;
 				else
-					_node = nullptr;
+					_node = _last_node;
 			}
 			else
-				_node = nullptr;
+				_node = _last_node;
 			return *this;
 		}
 

@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 00:56:27 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/02/23 21:37:59 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/03/02 16:51:05 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,16 @@ namespace ft
 		return (pair<T1, T2>(x, y));
 	}
 
+	// typedef enum color { BLACK, RED};
+
 	template <typename T>
 	struct BST_node
 	{
 		public:
 			typedef T value_type;
+			// typedef color color;
 
+			// color		_color;
 			value_type	value;
 			T*			parent;
 			T*			right;

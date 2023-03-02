@@ -6,14 +6,14 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:01:43 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/02/24 11:29:32 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/02/28 13:58:36 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../utils/utils.hpp"
 #include "iterator.hpp"
 #include <memory>
-#include <map>
+// #include <map>
 
 namespace ft {
 
@@ -30,11 +30,11 @@ class map
 		typedef typename Allocator::reference			reference;
 		typedef typename Allocator::const_reference		const_reference;
 
-		typedef typename ft::Binary_search_tree<value_type, key_compare>::iterator iterator;
-		typedef typename ft::Binary_search_tree<value_type, key_compare>::const_iterator const_iterator;
+		// typedef typename ft::Binary_search_tree<value_type, key_compare>::iterator iterator;
+		// typedef typename ft::Binary_search_tree<value_type, key_compare>::const_iterator const_iterator;
 
-		// typedef ft::BST_iterator<ft::bidirectional_iterator_tag, ft::BST_node<ft::pair<Key, T> > > iterator;
-		// typedef ft::BST_iterator<ft::bidirectional_iterator_tag const, ft::BST_node<ft::pair<Key, T> > const> const_iterator;
+		typedef ft::BST_iterator<ft::BST_node<ft::pair<Key, T> >, Compare> iterator;
+		typedef ft::BST_iterator<ft::BST_node<ft::pair<Key, T> > const, const Compare> const_iterator;
 		// typedef implementation defined iterator; // See 23.1
 		// typedef implementation defined const_iterator; // See 23.1
 		typedef typename Allocator::size_type size_type;
