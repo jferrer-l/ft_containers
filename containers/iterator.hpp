@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 18:38:55 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/02/28 14:57:17 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/03/08 20:18:12 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <iterator>
 #include <cstddef>
 #include "../utils/utils.hpp"
+#include <unistd.h>
 
 
 namespace ft
@@ -259,7 +260,7 @@ class random_access_iterator: ft::iterator<ft::random_access_iterator_tag, T>
 
 
 // template<class _Category, class T, class _Distance = ptrdiff_t, class _Pointer = T *, class _Reference = T &>
-template <typename T, class Compare>
+template <typename T>
 class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 {
 	public:
@@ -270,23 +271,24 @@ class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 		// typedef typename ft::bidirectional_iterator_tag	iterator_category;
 
 		typedef T* iterator_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::iterator_category     iterator_category;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::value_type            value_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::difference_type       difference_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::pointer               pointer;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::reference             reference;
+		typedef typename T::value_type            value_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category     iterator_category;
+		
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type       difference_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::pointer               pointer;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference             reference;
 
 		T*		_node;
-		Compare	comp;
+		// Compare	comp;
 		T*		_last_node;
 
 		// BST_iterator(): _node(nullptr)
 		// {}
-		BST_iterator(T* node, T* last_node, const Compare& com = Compare()): _node(node), _last_node(last_node), comp(com)
+		BST_iterator(T* node, T* last_node): _node(node), _last_node(last_node)
 		{}
-		BST_iterator(const BST_iterator& _iterator): _node(_iterator._node), _last_node(_iterator._last_node), comp(_iterator.comp)
+		BST_iterator(const BST_iterator& _iterator): _node(_iterator._node), _last_node(_iterator._last_node)
 		{}
-		BST_iterator(const Compare& com = Compare()): _node(), _last_node(), comp(com)
+		BST_iterator(): _node(), _last_node()
 		{}
 
 		BST_iterator &operator=(const BST_iterator& _iterator)
@@ -295,7 +297,7 @@ class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 				return *this;
 			_node = _iterator._node;
 			_last_node = _iterator._last_node;
-			comp = _iterator.comp;
+			// comp = _iterator.comp;
 			return *this;
 		}
 
@@ -318,12 +320,14 @@ class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 
 		pointer operator->() const
 		{
-			return &_node->value;
+			return &(_node->value);
 		}
 
 		BST_iterator& operator++()
 		{
-			if (_node->right != _last_node)
+			if (_node == _last_node)
+				_node = _last_node->left;
+			else if (_node->right != _last_node)
 			{
 				_node = _node->right;
 				while (_node->left != _last_node)
@@ -348,13 +352,15 @@ class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 		BST_iterator operator++(int)
 		{
 			BST_iterator temp(*this);
-			(*this)--;
+			operator++();
 			return temp;
 		}
 
 		BST_iterator& operator--()
 		{
-			if (_node->left != _last_node)
+			if (_node == _last_node)
+				_node = _last_node->right;
+			else if (_node->left != _last_node)
 			{
 				_node = _node->left;
 				while (_node->right != _last_node)
@@ -379,6 +385,140 @@ class BST_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 		BST_iterator operator--(int)
 		{
 			BST_iterator temp(*this);
+			operator--();
+			return temp;
+		}
+};
+
+
+template <typename T>
+class BST_const_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
+{
+	public:
+		// typedef typename T::value_type					value_type;
+		// typedef _Distance								difference_type;
+		// typedef _Pointer								pointer;
+		// typedef _Reference								reference;
+		// typedef typename ft::bidirectional_iterator_tag	iterator_category;
+
+		typedef T* iterator_type;
+		typedef typename T::value_type            value_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category     iterator_category;
+		
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type       difference_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::pointer               pointer;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference             reference;
+
+		T*		_node;
+		// Compare	comp;
+		T*		_last_node;
+
+		// BST_iterator(): _node(nullptr)
+		// {}
+		BST_const_iterator(T* node, T* last_node): _node(node), _last_node(last_node)
+		{}
+		BST_const_iterator(const BST_const_iterator& _iterator): _node(_iterator._node), _last_node(_iterator._last_node)
+		{}
+		BST_const_iterator(const BST_iterator<T>& _iterator): _node(_iterator._node), _last_node(_iterator._last_node)
+		{}
+		BST_const_iterator(): _node(), _last_node()
+		{}
+
+		BST_const_iterator &operator=(const BST_const_iterator& _iterator)
+		{
+			if (*this == _iterator)
+				return *this;
+			_node = _iterator._node;
+			_last_node = _iterator._last_node;
+			// comp = _iterator.comp;
+			return *this;
+		}
+
+		virtual ~BST_const_iterator() {}
+
+		bool operator==(const BST_const_iterator& _iterator)
+		{
+			return (_node == _iterator._node);
+		}
+
+		bool operator!=(const BST_const_iterator& _iterator)
+		{
+			return (_node != _iterator._node);
+		}
+		
+		reference operator*() const
+		{
+			return _node->value;
+		}
+
+		pointer operator->() const
+		{
+			return (&this->_node->value);
+		}
+
+		BST_const_iterator& operator++()
+		{
+			
+			if (_node == _last_node)
+				_node = _last_node->left;
+			else if (_node->right != _last_node)
+			{
+				_node = _node->right;
+				while (_node->left != _last_node)
+					_node = _node->left;
+			}
+			else if (_node->parent != _last_node && _node == _node->parent->left)
+				_node = _node->parent;
+			else if (_node->parent != _last_node && _node == _node->parent->right)
+			{
+				while (_node->parent != _last_node && _node == _node->parent->right)
+					_node = _node->parent;
+				if (_node->parent != _last_node)
+					_node = _node->parent;
+				else
+					_node = _last_node;
+			}
+			else
+				_node = _last_node;
+			return *this;
+		}
+
+		BST_const_iterator operator++(int)
+		{
+			BST_const_iterator temp(*this);
+			(*this)--;
+			return temp;
+		}
+
+		BST_const_iterator& operator--()
+		{
+			if (_node == _last_node)
+				_node = _last_node->right;
+			else if (_node->left != _last_node)
+			{
+				_node = _node->left;
+				while (_node->right != _last_node)
+					_node = _node->right;
+			}
+			else if (_node->parent != _last_node && _node == _node->parent->right)
+				_node = _node->parent;
+			else if (_node->parent != _last_node && _node == _node->parent->left)
+			{
+				while (_node->parent != _last_node && _node == _node->parent->left)
+					_node = _node->parent;
+				if (_node->parent != _last_node)
+					_node = _node->parent;
+				else
+					_node = _last_node;
+			}
+			else
+				_node = _last_node;
+			return *this;
+		}
+
+		BST_const_iterator operator--(int)
+		{
+			BST_const_iterator temp(*this);
 			(*this)--;
 			return temp;
 		}

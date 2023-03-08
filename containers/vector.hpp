@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 18:06:06 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/02/23 22:07:45 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/03/05 01:38:48 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@
 #define EXTENDED false
 
 namespace ft {
+
+// template <class T, class A>
+// 	void swap(vector<T, A> &v1, vector<T, A> &v2 );
 
 template <class T, class Alloc = std::allocator<T> >
 class vector
@@ -120,7 +123,7 @@ public:
 			_alloc.deallocate(_vector_pointer, _capacity);
 		}
 		_alloc = x._alloc;
-		_size= x._size;
+		_size = x._size;
 		_capacity = x._capacity;
 		if (!_capacity)
 			return *this;
@@ -429,6 +432,8 @@ public:
 
 	void swap (vector& other)
 	{
+		if (*this == other)
+			return ;
 		std::swap(_size, other._size);
 		std::swap(_capacity, other._capacity);
 		std::swap(_vector_pointer, other._vector_pointer);
@@ -535,16 +540,23 @@ template <class T, class Allocator>
 // 	void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
 
 
-	template <class T, class A>
-	void swap(vector<T, A> &v1, vector<T, A> &v2 ) {
-		v1.swap(v2);
-	}
+	// template <class T, class A>
+	// void swap(vector<T, A> &v1, vector<T, A> &v2 ) {
+	// 	// std::swap(v1, v2);
+	// 	// v1.swap(v2);
+	// 	// std::swap(v1._size, v2._size);
+	// 	// std::swap(v1._capacity, v2._capacity);
+	// 	// std::swap(v1._vector_pointer, v2._vector_pointer);
+	// 	// std::swap(v1._alloc, v2._alloc);
+	// }
 };
 
-namespace std
+namespace ft
 {
 	template <class T, class A>
 		void swap(ft::vector<T, A> &v1, ft::vector<T, A> &v2 ) {
+			if (v1 == v2)
+				return ;
 			v1.swap(v2);
 		}
 };
