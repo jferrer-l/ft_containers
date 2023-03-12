@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector_tests.cpp                                   :+:      :+:    :+:   */
+/*   utils_tests.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/12 19:54:40 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/12 19:57:34 by jferrer-         ###   ########.fr       */
+/*   Created: 2023/03/12 20:00:13 by jferrer-          #+#    #+#             */
+/*   Updated: 2023/03/12 20:00:20 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tests.hpp"
 
-void execute_vector_tests()
+void execute_utils_tests()
 {
-	print_test_name("VECTOR TEST");
+	print_test_name("UTILS TEST");
 }

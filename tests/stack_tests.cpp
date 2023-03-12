@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector_tests.cpp                                   :+:      :+:    :+:   */
+/*   stack_tests.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/12 19:54:40 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/12 19:57:34 by jferrer-         ###   ########.fr       */
+/*   Created: 2023/03/12 19:59:41 by jferrer-          #+#    #+#             */
+/*   Updated: 2023/03/12 19:59:54 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tests.hpp"
 
-void execute_vector_tests()
+void execute_stack_tests()
 {
-	print_test_name("VECTOR TEST");
+	print_test_name("STACK TEST");
 }

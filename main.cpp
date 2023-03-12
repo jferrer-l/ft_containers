@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:55:01 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/08 19:42:25 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/03/12 19:55:16 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <vector>
 #include <iterator>
 
-#include "tests/tests.hpp"
+// #include "tests/tests.hpp"
 
 // #include <gtest/gtest.h>
 //#include "vector_iterator.hpp"
@@ -99,6 +99,26 @@ void temp(ft::map<V, Y> m1)
 
 int main()
 {
+	{
+		std::vector<std::pair<int, int> > vec;
+		vec.push_back(std::make_pair(16, 3));
+		vec.push_back(std::make_pair(17, 3));
+		vec.push_back(std::make_pair(18, 3));
+		
+		std::map<int, int> m1;
+		m1.insert(vec.begin(), vec.end());
+		// m1.insert(ft::make_pair(16, 3));
+		// m1.insert(ft::make_pair(17, 3));
+		// m1.insert(ft::make_pair(18, 3));
+
+		std::map<int, int> m2;
+		m2.insert(std::make_pair(16, 3));
+		m2.insert(std::make_pair(17, 3));
+
+		std::cout << "m1.size = " << m1.size() << " m2.size = " << m2.size() << std::endl; 
+		std::cout << "operator== test = " << (m1 == m2) << std::endl;
+	}
+
 	{
 		ft::map<int, int> m1;
 		// ft::map<int, int> m2;

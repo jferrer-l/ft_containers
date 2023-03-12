@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 18:38:55 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/08 20:18:12 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/03/09 17:32:22 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -413,7 +413,7 @@ class BST_const_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 		// Compare	comp;
 		T*		_last_node;
 
-		// BST_iterator(): _node(nullptr)
+		// BST_iterator(): _node(), _last_node()
 		// {}
 		BST_const_iterator(T* node, T* last_node): _node(node), _last_node(last_node)
 		{}
@@ -453,7 +453,7 @@ class BST_const_iterator: ft::iterator<ft::bidirectional_iterator_tag, T>
 
 		pointer operator->() const
 		{
-			return (&this->_node->value);
+			return &(_node->value);
 		}
 
 		BST_const_iterator& operator++()
@@ -568,7 +568,7 @@ class reverse_iterator: public ft::iterator<typename ft::iterator_traits<iterato
 		// reverse_iterator(reverse_iterator const &it): _it(it._it) {}
 
 		iterator					base() const { return _it; }
-		reference					operator	*	()								{ iterator tmp = _it; return *--_it; }
+		reference					operator	*	()								{ iterator tmp = _it; return *(--tmp); }
 		pointer						operator	->	()								{ return &(operator*()); }
 
 		reverse_iterator&			operator	++	()								{ --_it; return *this; }

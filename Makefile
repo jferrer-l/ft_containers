@@ -1,4 +1,4 @@
-SRCS =  main.cpp tests/vector_tests.cpp tests/test_utils.cpp
+SRCS =  std_main.cpp tests/vector_tests.cpp tests/utils_tests.cpp tests/map_tests.cpp tests/stack_tests.cpp tests/tests_utils.cpp
 
 
 OBJS = ${SRCS:.cpp=.o}
@@ -7,7 +7,7 @@ CPP = c++
 RM = rm -f
 CPPFLAGS =  -Wall -Werror -Wextra
 # -fsanitize=address -MMD
-HEADER = containers/vector.hpp
+HEADER = containers/vector.hpp containers/map.hpp containers/iterator.hpp containers/stack.hpp tests/tests.hpp
 NAME = exec
 
 %.o:%.cpp

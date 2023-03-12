@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 00:56:27 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/08 19:22:27 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/03/09 20:34:14 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,12 @@ namespace ft
 	}
 
 	template <class T1, class T2>
+	bool operator>(const pair<T1, T2>& x, const pair<T1, T2>& y)
+	{
+		return (x.first > y.first || (!(y.first > x.first) && x.second > y.second));
+	}
+
+	template <class T1, class T2>
 	ft::pair<T1, T2> make_pair(T1 x, T2 y)
 	{
 		return (ft::pair<T1, T2>(x, y));
@@ -157,6 +163,18 @@ namespace ft
 			return (first < second);
 		}
 	};
+
+	template <class InputIterator1, class InputIterator2>
+	bool equal ( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2 )
+	{
+		while (first1!=last1)
+		{
+			if (!(*first1 == *first2))
+				return false;
+			++first1; ++first2;
+		}
+		return true;
+	}
 }
 
 #endif

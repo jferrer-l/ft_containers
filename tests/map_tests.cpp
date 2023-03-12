@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector_tests.cpp                                   :+:      :+:    :+:   */
+/*   map_tests.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/12 19:54:40 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/12 19:57:34 by jferrer-         ###   ########.fr       */
+/*   Created: 2023/03/12 19:59:25 by jferrer-          #+#    #+#             */
+/*   Updated: 2023/03/12 19:59:35 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tests.hpp"
 
-void execute_vector_tests()
+void execute_map_tests()
 {
-	print_test_name("VECTOR TEST");
+	print_test_name("MAP TEST");
 }

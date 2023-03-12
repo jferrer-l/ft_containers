@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:29:54 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/08 20:17:15 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/03/09 18:05:25 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,11 @@ class BST
 
 		// typedef typename iterator<T, _compare> 
 		typedef ft::BST_iterator<Node> iterator;
-		typedef ft::BST_iterator<Node> const_iterator;
+		typedef ft::BST_iterator<Node> const const_iterator;
 
 		node_pointer		_last_node;
 		_Allocator_node		_node_alloc;
+		value_compare		comp;
 
 		BST(const allocator_type_node& node_alloc = allocator_type_node()): _node_alloc(node_alloc)
 		{
@@ -84,8 +85,6 @@ class BST
 		// 	// this->insert(x.begin(), x.end());
 		// 	return *this;
 		// }
-
-	private:
 		void printTree(node_pointer root, int indent = 1, char symbol = '-')
 		{
 			if (root == _last_node) {
@@ -99,15 +98,21 @@ class BST
 			for (int i = 0; i < indent; i++) {
 				std::cout << " ";
 			}
+			// if (root->parent = _last_node)
+			// 	std::cout << std::endl;
 			std::cout << symbol << root->value.first;
 			if (root->_color)
 				std::cout << "R\n";
 			else
 				std::cout << "B\n";
+			// if (root->parent = _last_node)
+			// 	std::cout << std::endl;
 
 			// Print the left subtree
 			printTree(root->left, indent + 4);
 		}
+	private:
+		
 
 		void insert_i2(node_pointer temp)//parent and uncle RED
 		{
@@ -217,6 +222,14 @@ class BST
 			temp->left->parent = temp;
 		}
 		
+		bool check_compare() {
+        if (std::is_same<_Compare, std::minus<int> >::value)
+		{
+            return true;
+        }
+		return false;
+    }
+
 	public:
 	// ft::pair<iterator, bool> insert(value_type to_insert)
 	// 		{
@@ -253,6 +266,7 @@ class BST
 	// 			else
 	// 				prev_node->left = new_node;
 				
+	// 			_last_node->parent = get_root();
 	// 			_last_node->left = get_smaller();//_BST_get_lower_node(_last_node->parent);
 	// 			_last_node->right = get_bigger();//_BST_get_higher_node(_last_node->parent);
 	// 			// _last_node->value.first += 1;
@@ -262,21 +276,36 @@ class BST
 		{
 			// std::cerr << "insert\n";
 			node_pointer temp = _node_alloc.allocate(1);
+			// std::cout << "allocation\n";
 			node_pointer temp_node = _last_node->parent;
 			// node_pointer base = _last_node->parent;
 
 			// std::cout << x.first << std::endl;
 			while (temp_node != _last_node)
 			{
-				if (temp_node->value.first < x.first && temp_node->right != _last_node)
-					temp_node = temp_node->right;
-				else if (temp_node->value.first > x.first && temp_node->left != _last_node)
-					temp_node = temp_node->left;
-				else if (temp_node->value.first == x.first)
+				// if (temp_node->value.first < x.first && temp_node->right != _last_node)
+				// 	temp_node = temp_node->right;
+				// else if (temp_node->value.first > x.first && temp_node->left != _last_node)
+				// 	temp_node = temp_node->left;
+				// std::cout << "values and result: \n";
+				// std::cout << temp_node->value.first << std::endl;
+				// std::cout << x.first << std::endl;
+				// std::cout << comp(temp_node->value.first, x.first) << std::endl;
+				// if (temp_node->value.first == x.first)
+				// {
+				// 	_node_alloc.deallocate(temp, 1);
+				// 	return (ft::make_pair(iterator(temp_node, _last_node), false));
+				// }
+				if (temp_node->value.first == x.first)
 				{
 					_node_alloc.deallocate(temp, 1);
 					return (ft::make_pair(iterator(temp_node, _last_node), false));
 				}
+				else if ((comp(temp_node->value.first, x.first) != true || check_compare()) && temp_node->left != _last_node)
+					temp_node = temp_node->left;
+				else if (comp(temp_node->value.first, x.first) == true && temp_node->right != _last_node)
+					temp_node = temp_node->right;
+				
 				else
 					break;
 			}
@@ -284,9 +313,11 @@ class BST
 			// std::cerr << " e = " << temp->value.first << " ";
 			if (temp_node == _last_node)
 				_last_node->parent = temp;
-			else if (temp_node->value.first < x.first)
+			else if (comp(temp_node->value.first, x.first) == true)
 				temp_node->right = temp;
-			else
+			// else if (temp_node->value.first < x.first)
+			// 	temp_node->right = temp;
+			else if (comp(temp_node->value.first, x.first) != true)
 				temp_node->left = temp;
 			temp->_color = true;
 
@@ -349,10 +380,17 @@ class BST
 				return _last_node;
 			while (temp != _last_node && temp->value.first != x.first)
 			{
-				if (temp->value.first < x.first)
+				// std::cout << comp(temp->value.first, x.first) << std::endl;
+				// std::cout << x.first << std::endl;
+				// std::cout << temp->value.first << std::endl;
+				if (comp(temp->value.first, x.first) == true)
 					temp = temp->right;
-				else if (temp->value.first > x.first)
+				else if (comp(temp->value.first, x.first) != true)
 					temp = temp->left;
+				// if (temp->value.first < x.first)
+				// 	temp = temp->right;
+				// else if (temp->value.first > x.first)
+				// 	temp = temp->left;
 			}
 
 			return temp;
@@ -430,6 +468,16 @@ class BST
 			// std::cout << "\n\n\n\n\n\n";
 			
 			return (1);
+		}
+
+		void swap(BST& x)
+		{
+			if (&x == this)
+				return ;
+			
+			node_pointer temp = this->_last_node;
+			this->_last_node = x._last_node;
+			x._last_node = temp;
 		}
 
 		// size_type delete_by_range(iterator first, iterator last)

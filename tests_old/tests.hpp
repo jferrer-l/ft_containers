@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/12 19:53:55 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/12 20:01:38 by jferrer-         ###   ########.fr       */
+/*   Created: 2023/01/28 01:25:24 by jferrer-          #+#    #+#             */
+/*   Updated: 2023/01/30 00:25:54 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,36 @@
 #define TESTS_HPP
 
 #include <iostream>
+#include <cassert>
+#include <ctime>
 #include <vector>
-#include <map>
-#include <stack>
-#include <string>
-#include <algorithm>
+#include <iterator>
+#include <cstddef>
+#include "../containers/vector.hpp"
+#include "../containers/iterator.hpp"
 
-void print_test_name(std::string name);
+#define LINE_SIZE_TEST 80
+#define RESET_COLOR "\033[0m"
+#define SELECT_COLOR(num1, num2) ((num1 * 20 < num2) && (num1 > 0) ? "\033[31m" : "\033[32m")
 
-void execute_vector_tests();
+
+// enum class Types {
+// 	INT,
+// 	FLOAT,
+// 	CHAR,
+// };
+
+/*				Iterator Tests				*/
+
+int		test_iterator_traits_categories();
+int		test_iterator_constructors();
+int		test_reverse_iterator();
+void	top(std::string temp);
+void	bot(std::string temp);
+
+
+/*				Vector Tests				*/
+
+
 
 #endif
