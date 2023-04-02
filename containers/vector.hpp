@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 18:06:06 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/05 01:38:48 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/03/13 00:49:17 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,7 +340,7 @@ public:
 			else
 				reserve(_size + diff);
 		}
-		size_t i = _size;
+		size_type i = _size;
 		try
 		{
 			for (; i > index; --i)
@@ -348,7 +348,7 @@ public:
 				_alloc.construct(&_vector_pointer[i + diff - 1], _vector_pointer[i - 1]);
 				_alloc.destroy(&(_vector_pointer[i - 1]));
 			}
-			for (i = 0; i < diff; i++, temp++)
+			for (i = 0; (difference_type)i < diff; i++, temp++)
 				_alloc.construct(&_vector_pointer[i + index], *temp);
 		}
 		catch(...)
