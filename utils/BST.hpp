@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:29:54 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/09 18:05:25 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/04/03 00:09:24 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 #define BST_HPP
 
 #include "utils.hpp"
+// #include <map>
 #include "../containers/iterator.hpp"
 #include <memory>
 
 namespace ft
 {
 
-template <typename T,  class _Compare = ft::less<T>, class Node = ft::BST_node<T>,
+template <typename T, class _Compare2, class _Compare = ft::less<T>, class Node = ft::BST_node<T>,
 	class _Allocator = std::allocator<T>, class _Allocator_node = std::allocator<Node> >
 class BST
 {
@@ -50,7 +51,8 @@ class BST
 
 		node_pointer		_last_node;
 		_Allocator_node		_node_alloc;
-		value_compare		comp;
+		value_compare		comp2;
+		_Compare2			comp;
 
 		BST(const allocator_type_node& node_alloc = allocator_type_node()): _node_alloc(node_alloc)
 		{
@@ -274,6 +276,7 @@ class BST
 	// 		}
 		pair<iterator, bool> insert(value_type x)
 		{
+			// std::cout << "insert " << x.first << std::endl;
 			// std::cerr << "insert\n";
 			node_pointer temp = _node_alloc.allocate(1);
 			// std::cout << "allocation\n";
@@ -283,41 +286,80 @@ class BST
 			// std::cout << x.first << std::endl;
 			while (temp_node != _last_node)
 			{
-				// if (temp_node->value.first < x.first && temp_node->right != _last_node)
-				// 	temp_node = temp_node->right;
-				// else if (temp_node->value.first > x.first && temp_node->left != _last_node)
+				// int i = (!comp(temp_node->value.first, x.first) && !comp(x.first, temp_node->value.first));
+				// int j = (!comp2(temp_node->value, x) && !comp2(x, temp_node->value));
+				// std::cout << i << j << std::endl;
+				// if (i != j)
+				// {
+				// 	std::cout << i << j << std::endl;
+				// 	std::cout << "i = " << i << std::endl;
+				// 	std::cout << "j = " << j << std::endl;
+				// 	// std::cout << "temp_node = " << temp_node.first << std::endl;
+				// 	// std::cout << "x = " << x.first << std::endl;
+				// }
+
+				// i = (comp(temp_node->value.first, x.first) != true);
+				// j = (comp2(temp_node->value, x) != true);
+				// // std::cout << i << j << std::endl;
+				// if (i != j)
+				// {
+				// 	std::cout << "i1 = " << comp(temp_node->value.first, x.first) << " true = " << true << std::endl;
+				// 	std::cout << "j1 = " << comp2(temp_node->value, x) << " true = " << true << std::endl;
+				// 	// std::cout << i << j << std::endl;
+				// 	std::cout << "i = " << i;
+				// 	std::cout << " j = " << j;
+				// 	std::cout << " temp_node = " << temp_node->value.first;
+				// 	std::cout << " x = " << x.first;
+				// 	std::cout << " iid " << typeid(comp).name();
+				// 	std::cout << " jid " << typeid(comp2).name();
+				// 	std::cout << endl;
+				// }
+
+				// std::cout << temp_node->value.first << " " << x.first << std::endl;
+				// if (!comp(temp_node->value, x) && !comp(x, temp_node->value))
+				if (temp_node->value.first == x.first)
+				{
+					// std::cout << "sahdkjasjhdkjashdkjsahjkdhkjashkd\n";
+					_node_alloc.deallocate(temp, 1);
+					return (ft::make_pair(iterator(temp_node, _last_node), false));
+				}
+				// else if ((comp(temp_node->value, x) != true || check_compare()) && temp_node->left != _last_node)
 				// 	temp_node = temp_node->left;
-				// std::cout << "values and result: \n";
-				// std::cout << temp_node->value.first << std::endl;
-				// std::cout << x.first << std::endl;
-				// std::cout << comp(temp_node->value.first, x.first) << std::endl;
+				// else if (comp(temp_node->value, x) == true && temp_node->right != _last_node)
+				// 	temp_node = temp_node->right;
+				else if ((comp(x, temp_node->value)) && temp_node->left != _last_node)
+					temp_node = temp_node->left;
+				else if ((comp(temp_node->value, x)) && temp_node->right != _last_node)
+					temp_node = temp_node->right;
+				// else
+				// {
+				// 	_node_alloc.deallocate(temp, 1);
+				// 	return (ft::make_pair(iterator(temp_node, _last_node), false));
+				// }
+				else
+					break;
+
 				// if (temp_node->value.first == x.first)
 				// {
 				// 	_node_alloc.deallocate(temp, 1);
 				// 	return (ft::make_pair(iterator(temp_node, _last_node), false));
 				// }
-				if (temp_node->value.first == x.first)
-				{
-					_node_alloc.deallocate(temp, 1);
-					return (ft::make_pair(iterator(temp_node, _last_node), false));
-				}
-				else if ((comp(temp_node->value.first, x.first) != true || check_compare()) && temp_node->left != _last_node)
-					temp_node = temp_node->left;
-				else if (comp(temp_node->value.first, x.first) == true && temp_node->right != _last_node)
-					temp_node = temp_node->right;
-				
-				else
-					break;
+				// else if ((comp(temp_node->value.first, x.first) != true || check_compare()) && temp_node->left != _last_node)
+				// 	temp_node = temp_node->left;
+				// else if (comp(temp_node->value.first, x.first) == true && temp_node->right != _last_node)
+				// 	temp_node = temp_node->right;
+				// else
+				// 	break;
 			}
 			_node_alloc.construct(temp, Node(x, temp_node, _last_node, _last_node));
 			// std::cerr << " e = " << temp->value.first << " ";
 			if (temp_node == _last_node)
 				_last_node->parent = temp;
-			else if (comp(temp_node->value.first, x.first) == true)
+			else if (comp(temp_node->value, x) == true)
 				temp_node->right = temp;
 			// else if (temp_node->value.first < x.first)
 			// 	temp_node->right = temp;
-			else if (comp(temp_node->value.first, x.first) != true)
+			else if (comp(temp_node->value, x) != true)
 				temp_node->left = temp;
 			temp->_color = true;
 
@@ -375,23 +417,79 @@ class BST
 
 		node_pointer search_by_key(const value_type& x)
 		{
+			// printTree(_last_node->parent);
 			node_pointer temp = _last_node->parent;
 			if (_last_node->parent == _last_node)
 				return _last_node;
+			// while (temp != _last_node && (comp(temp->value, x) || comp(x, temp->value)))
 			while (temp != _last_node && temp->value.first != x.first)
 			{
-				// std::cout << comp(temp->value.first, x.first) << std::endl;
 				// std::cout << x.first << std::endl;
 				// std::cout << temp->value.first << std::endl;
-				if (comp(temp->value.first, x.first) == true)
+				// if (!(!comp(temp->value, x) && !comp(x, temp->value)) != (temp->value.first != x.first))
+				// {
+				// 	std::cout << typeid(comp).name() << std::endl;
+				// 	std::cout << "temp->value = " << temp->value.first << " x = " << x.first << std::endl;
+				// 	std::cout << !(!comp(temp->value, x) && !comp(x, temp->value)) << std::endl;
+				// 	std::cout << (temp->value.first != x.first) << std::endl;
+				// }
+				
+
+				// else if ((comp(x, temp->value)) && temp_node->left != _last_node)
+				// 	temp = temp->left;
+				// else if ((comp(temp->value, x)) && temp_node->right != _last_node)
+				// 	temp = temp->right;
+
+				// std::cout << "comp" << temp->value.first << " " <<  temp->value.second << " " << x.first << " " <<  x.second <<  std::endl;
+				// std::cout << (temp->value == x) << std::endl;
+
+
+				// if (temp->value.first == x.first)
+				// // if (!comp(x, temp->value) && !comp(temp->value, x))
+				// {
+				// 	// std::cout << "ret = " << temp->value.first << " " << x.first << std::endl;
+				// 	return temp;
+				// }
+				// else if ((comp(x, temp->value)) && temp->left != _last_node)
+				// 	temp = temp->left;
+				// else if ((comp(temp->value, x)) && temp->right != _last_node)
+				// 	temp = temp->right;
+				// else
+				// 	break;
+				// if (temp == _last_node)
+				// 	return _last_node;
+
+				
+
+				// if (comp(x, temp->value))
+				// 	temp = temp->left;
+				// else if (comp(temp->value, x))
+				// 	temp = temp->right;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+				// else
+				// {
+				// 	// if (x.first != temp->value.first)
+				// 	// {
+				// 		std::cout << x.first << std::endl;
+				// 		std::cout << temp->value.first << std::endl;
+				// 	// }
+
+				// 	return temp;
+				// }
+				// if (temp == _last_node)
+				// 	return _last_node;
+
+				if (comp(temp->value, x) == true)
 					temp = temp->right;
-				else if (comp(temp->value.first, x.first) != true)
+				else if (comp(temp->value, x) != true)
 					temp = temp->left;
+
+
 				// if (temp->value.first < x.first)
 				// 	temp = temp->right;
 				// else if (temp->value.first > x.first)
 				// 	temp = temp->left;
 			}
+			// std::cout << "temp->value = " << temp->value.first << " x = " << x.first << std::endl;
 
 			return temp;
 		}
@@ -401,10 +499,40 @@ class BST
 			// printTree(_last_node->parent);
 			// std::cout << "\n\n\n\n\n\n";
 			node_pointer temp = search_by_key(x);
+			// printTree(_last_node->parent);
+			// std::cout << "\n\n\n";
+
+			// pid_t pid = getpid();
+			// string a = "leaks ";
+			// a += std::to_string(static_cast<int>(pid));
+			// usleep(500);
+			// string s = get_leak_string(exec(a.c_str()));
+			// if (strlen(s.c_str()) > 50)
+			// {
+				// std::cout << typeid(comp).name() << std::endl;
+				// std::cout << s << std::endl;
+				// std::cout << "x = " << x.first << " " << x.second << std::endl;
+				// std::cout << temp->value.first << std::endl;
+				// printTree(_last_node->parent);
+				// std::cout << "\n\n\n";
+			// }
+
+			// std::cout << "x = " << x.first << " " << x.second << std::endl;
+			// std::cout << temp->value.first << std::endl;
+			// printTree(_last_node->parent);
+			// std::cout << "\n\n\n";
 			if (temp == _last_node)
+			{
+				// std::cout << "x = " << x.first << x.second << std::endl;
+				// printTree(_last_node->parent);
+				// std::cout << "\n\n\n";
 				return (0);
+			}
 			iterator it(temp, _last_node);
-			return (delete_by_iterator(temp));
+			size_type gi = delete_by_iterator(temp);
+			// printTree(_last_node->parent);
+			// std::cout << "\n\n\n";
+			return (gi);
 		}
 
 		size_type delete_by_iterator(node_pointer node)

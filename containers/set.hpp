@@ -1,12 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
+/*   set.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/02 16:50:31 by jferrer-          #+#    #+#             */
+/*   Updated: 2023/04/02 16:54:23 by jferrer-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:01:43 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/04/02 21:46:57 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/03/12 22:03:45 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,28 +70,16 @@ class map
 			friend class map;
 			protected:
 			Compare comp;
-			// value_compare(Compare c = Compare()) : comp(c) {}
+			value_compare(Compare c) : comp(c) {}
 			public:
-			value_compare(Compare c = Compare()) : comp(c) {}
-				int operator()(const key_type& x, const key_type& y) const
+				bool operator()(const value_type& x, const value_type& y) const
 				{
-					// std::cout << "im in 111\n";
-					return comp(x, y);
-				}
-
-				int operator()(const value_type& x, const value_type& y) const
-				{
-					// std::cout << "im in 222\n";
-					// std::cout << x.first << " " << y.first << " " << comp(x.first, y.first) << std::endl;
 					return comp(x.first, y.first);
 				}
 		};
-
-		typedef value_compare test_compare;
 		
-	public:
-		test_compare vava;
-		ft::BST<value_type, value_compare, Compare>				_bst;
+	protected:
+		ft::BST<value_type, Compare>				_bst;
 		allocator_type								_allocator;
 		key_compare									_compare;
 		
