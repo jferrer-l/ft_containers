@@ -21,40 +21,41 @@
 namespace ft
 {
 
-template <typename T, class _Compare2, class _Compare = ft::less<T>, class Node = ft::BST_node<T>,
-	class _Allocator = std::allocator<T>, class _Allocator_node = std::allocator<Node> >
+template <typename T, class _Compare2, class _Compare = ft::less<T>,
+	class _Allocator_node = std::allocator<T>, class Node = ft::BST_node<T> >
 class BST
 {
 	public:
 		typedef T										value_type;
 		typedef _Compare								value_compare;
-		// typedef _Allocator								allocator_type;
-		typedef _Allocator_node							allocator_type_node;
+		// typedef _Allocator_node							allocator_type_node;
 
 	// private:
 	// 	typedef allocator_traits<allocator_type>         __alloc_traits;
 
 	public:
-		// typedef typename allocator_type::pointer			pointer;
-		// typedef typename allocator_type::const_pointer		const_pointer;
-		// typedef typename allocator_type::size_type			size_type;
-		// typedef typename allocator_type::difference_type	difference_type;
 
-		typedef typename allocator_type_node::pointer			node_pointer;
+		typedef typename _Allocator_node::template rebind<ft::BST_node<T> >::other	allocator_type_node;
+
+		typedef ft::BST_node<T>	node_type;
+		typedef node_type*	node_pointer;
+		// typedef typename allocator_type_node::pointer			node_pointer;
 		typedef typename allocator_type_node::const_pointer		const_pointer;
 		typedef typename allocator_type_node::size_type			size_type;
 		typedef typename allocator_type_node::difference_type	difference_type;
+
+		
 
 		// typedef typename iterator<T, _compare> 
 		typedef ft::BST_iterator<Node> iterator;
 		typedef ft::BST_iterator<Node> const const_iterator;
 
 		node_pointer		_last_node;
-		_Allocator_node		_node_alloc;
+		allocator_type_node		_node_alloc;
 		value_compare		comp2;
 		_Compare2			comp;
 
-		BST(const allocator_type_node& node_alloc = allocator_type_node()): _node_alloc(node_alloc)
+		BST(allocator_type_node node_alloc = allocator_type_node()): _node_alloc(node_alloc)
 		{
 			// std::cerr << "constructor called\n";
 
@@ -112,6 +113,12 @@ class BST
 
 			// Print the left subtree
 			printTree(root->left, indent + 4);
+		}
+
+		size_type max_size() const
+		{
+			return _node_alloc.max_size();
+			// return std::min<size_type>(_allocator.max_size(), std::numeric_limits<size_type>::max());
 		}
 	private:
 		

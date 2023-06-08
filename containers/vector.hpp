@@ -6,7 +6,7 @@
 /*   By: jferrer- <jferrer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 18:06:06 by jferrer-          #+#    #+#             */
-/*   Updated: 2023/03/13 00:49:17 by jferrer-         ###   ########.fr       */
+/*   Updated: 2023/04/19 17:37:33 by jferrer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,12 +217,12 @@ public:
 
 	reference operator[](size_type n)							{ return _vector_pointer[n]; }
 	const_reference operator[](size_type n) const				{ return _vector_pointer[n]; }
-	reference at(size_type n)									{ assert(n < size()); return _vector_pointer[n]; } //in later versions it throws std::out_of_range
-	const_reference at(size_type n) const						{ assert(n < size()); return _vector_pointer[n]; } //in later versions it throws std::out_of_range
-	reference front()											{ assert(!empty()); return *_vector_pointer; }
-	const_reference front() const								{ assert(!empty()); return *_vector_pointer; }
-	reference back()											{ assert(!empty()); return _vector_pointer[_size - 1]; }
-	const_reference back() const								{ assert(!empty()); return _vector_pointer[_size - 1]; }
+	reference at(size_type n)									{ if(!(n < size())) throw std::out_of_range("vector"); return _vector_pointer[n]; } //in later versions it throws std::out_of_range
+	const_reference at(size_type n) const						{ if(!(n < size())) throw std::out_of_range("vector"); return _vector_pointer[n]; } //in later versions it throws std::out_of_range
+	reference front()											{ return *_vector_pointer; }
+	const_reference front() const								{ return *_vector_pointer; }
+	reference back()											{ return _vector_pointer[_size - 1]; }
+	const_reference back() const								{ return _vector_pointer[_size - 1]; }
 
 	// /*								Modifiers								*/
 
@@ -384,44 +384,26 @@ public:
 	iterator erase( iterator pos )//implementation of the new version of erase and usually less efficient but the most liked by the tests 
 	{
 		assert(begin() <= pos && pos < end());
-		// vector<T> strong_guarantee(*this);
-		// try
-		// {
-			size_type index = pos - begin();
-			_alloc.destroy(this->_vector_pointer + index);//check this
-			for (size_type i = index; i < _size; ++i)
-			{
-				_alloc.construct(&_vector_pointer[i], _vector_pointer[i + 1]); //this is better but usually less optimal
-				// _vector_pointer[i] = _vector_pointer[i + 1];
-			}
-		// }
-		// catch(...)
-		// {
-		// 	this->swap(strong_guarantee);
-		// 	throw;
-		// }
-		
+		size_type index = pos - begin();
+		_alloc.destroy(this->_vector_pointer + index);//check this
 		_size--;
+		for (size_type i = index; i < _size; ++i)
+		{
+			// _alloc.construct((_vector_pointer + i), *(_vector_pointer + i + 1));
+			_alloc.construct(&_vector_pointer[i], _vector_pointer[i + 1]); //this is better but usually less optimal
+			// _vector_pointer[i] = _vector_pointer[i + 1];
+		}
 		return pos;
 	}
 
 	iterator erase (iterator first, iterator last)
 	{
 		assert(begin() <= first && first < end());
-		// vector<T> strong_guarantee(*this);
-		// try
-		// {
-			difference_type index = first - begin();
-			for (iterator temp = first; temp != last; index++, temp++)
-				_alloc.destroy(this->_vector_pointer + (temp - begin()));
-			if (first + 1 != end())
-				std::copy(last, end(), first);
-		// }
-		// catch(...)
-		// {
-		// 	this->swap(strong_guarantee);
-		// 	throw;
-		// }
+		difference_type index = first - begin();
+		for (iterator temp = first; temp != last; index++, temp++)
+			_alloc.destroy(this->_vector_pointer + (temp - begin()));
+		if (first + 1 != end())
+			std::copy(last, end(), first);
 		difference_type len = last - first;
 		_size -= len;
 		while (len)
@@ -432,7 +414,7 @@ public:
 
 	void swap (vector& other)
 	{
-		if (*this == other)
+		if (this == &other)
 			return ;
 		std::swap(_size, other._size);
 		std::swap(_capacity, other._capacity);

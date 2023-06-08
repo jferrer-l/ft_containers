@@ -79,7 +79,7 @@ class map
 		
 	public:
 		test_compare vava;
-		ft::BST<value_type, value_compare, Compare>				_bst;
+		ft::BST<value_type, value_compare, Compare, Alloc>				_bst;
 		allocator_type								_allocator;
 		key_compare									_compare;
 		
@@ -91,7 +91,7 @@ class map
 		// 23.3.1.1 construct/copy/destroy:
 		explicit map(const Compare& comp = Compare(), const Alloc& alloc = Alloc()): _bst(), _allocator(alloc), _compare(comp)
 		{
-
+			// ft::pair<const Key, T> *temp = _allocator.allocate(1);
 		}
 
 		template <class InputIterator>
@@ -127,10 +127,10 @@ class map
 		const_iterator begin() const { return (const_iterator(_bst._last_node->left, _bst._last_node)); }
 		iterator end() { return (iterator(_bst._last_node, _bst._last_node)); }
 		const_iterator end() const { return (const_iterator(_bst._last_node, _bst._last_node)); }
-		reverse_iterator rbegin() { return reverse_iterator(end()); }
-		const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
-		reverse_iterator rend() { return reverse_iterator(begin()); }
-		const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+		reverse_iterator rbegin() { return reverse_iterator(--end()); }
+		const_reverse_iterator rbegin() const { return const_reverse_iterator(--end()); }
+		reverse_iterator rend() { return reverse_iterator(--begin()); }
+		const_reverse_iterator rend() const { return const_reverse_iterator(--begin()); }
 		
 		// capacity:
 		bool empty() const { return (_bst._last_node == _bst._last_node->parent); }
@@ -138,9 +138,11 @@ class map
 		{
 			return distance(begin(), end());
 		}
+
 		size_type max_size() const
 		{
-			return std::min<size_type>(_allocator.max_size(), std::numeric_limits<difference_type>::max());
+			return _bst.max_size();
+			// return std::min<size_type>(_allocator.max_size(), std::numeric_limits<size_type>::max());
 		}
 
 		// 23.3.1.2 element access:
@@ -322,7 +324,7 @@ bool operator<=(const map<Key,T,Compare,Alloc>& x, const map<Key,T,Compare,Alloc
 template <class Key, class T, class Compare, class Alloc>
 void swap(map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y)
 {
-	
+	x.swap(y);
 }
 
 }

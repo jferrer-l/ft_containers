@@ -558,7 +558,7 @@ class reverse_iterator: public ft::iterator<typename ft::iterator_traits<iterato
 		// typedef typename iterator::iterator_category	iterator_category;
 
 		//reverse_iterator(): _it(){}
-		explicit reverse_iterator(iterator_type x = nullptr): _it(x) {}
+		explicit reverse_iterator(iterator_type x = iterator()): _it(x) {}
 		template <class U>
 			reverse_iterator(const reverse_iterator<U>& u,
 				typename ft::enable_if<std::is_convertible<U, iterator>::value>::type* = 0)
@@ -568,7 +568,7 @@ class reverse_iterator: public ft::iterator<typename ft::iterator_traits<iterato
 		// reverse_iterator(reverse_iterator const &it): _it(it._it) {}
 
 		iterator					base() const { return _it; }
-		reference					operator	*	()								{ iterator tmp = _it; return *(--tmp); }
+		reference					operator	*	()								{ return *_it; }
 		pointer						operator	->	()								{ return &(operator*()); }
 
 		reverse_iterator&			operator	++	()								{ --_it; return *this; }

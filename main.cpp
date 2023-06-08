@@ -11,370 +11,292 @@
 /* ************************************************************************** */
 
 #include <iostream>
+
+#ifndef NAMESPACE
 #include "containers/vector.hpp"
 #include "containers/map.hpp"
-//#include "containers/iterator.hpp"
-#include <vector>
-#include <iterator>
+#include "containers/stack.hpp"
+#include "utils/utils.hpp"
+#define NAMESPACE ft
+#define FT true
 
-// #include "tests/tests.hpp"
+#else
+# include <vector>
+# include <map>
+# include <stack>
 
-// #include <gtest/gtest.h>
-//#include "vector_iterator.hpp"
+#endif
 
-int	test_iterator();
-int	test_iterator_0b();
-
-// template<typename T>
-// class MyContainer;
-
-// template <typename T>
-// struct MyIterator {
-//     // constructor
-//     MyIterator(MyContainer<T>* container, int index) : m_container(container), m_index(index) {}
-//     // overload the increment operator
-//     MyIterator& operator++() {
-//         ++m_index;
-//         return *this;
-//     }
-//     // overload the dereference operator
-//     T& operator*() {
-//         return m_container->getElement(m_index);
-//     }
-//     // overload the comparison operators
-//     bool operator==(const MyIterator& other) {
-//         return m_index == other.m_index;
-//     }
-//     bool operator!=(const MyIterator& other) {
-//         return !(*this == other);
-//     }
-//     private:
-//         MyContainer<T>* m_container;
-//         int m_index;
-// };
-
-// template<typename T>
-// class MyContainer {
-//     // implementation here
-//     public:
-// 	MyIterator<MyContainer> iterator;
-//     //using iterator = MyIterator<MyContainer>;
-//     // iterator begin();
-//     // iterator end();
-// };
-
-// template <class T>
-void	print_vec(std::vector<int> T)
+template <typename T>
+static void vector_print_it(T& toto)
 {
-	std::cout << "vector size = " << T.size() << ", capacity = " << T.capacity() << std::endl;
-	for (size_t i = 0; i < T.size(); i++)
-		std::cout << T[i] << " ";
+	typename T::iterator it;
+	typename T::reverse_iterator itr;
+
+	it = toto.begin();
+	itr = toto.rbegin();
+	for (;it != toto.end();it++, itr++)
+		std::cout << "  iterator " << *it << " - " << *itr << std::endl;
+
+	std::cout << std::endl;
+	std::cout << "    size() " << toto.size() << std::endl;
+	std::cout << "capacity() " << toto.capacity() << std::endl;
+	std::cout << "   empty() " << toto.empty() << std::endl;
+	std::cout << std::endl << std::endl;
+}
+
+void main_vector(void)
+{
+	NAMESPACE::vector<int>	toto;
+
+	std::cout << "max_size() " << toto.max_size() << std::endl;
+	vector_print_it(toto);
+
+	NAMESPACE::vector<int>	tata(10, 42);
+
+	std::cout << "max_size() " << tata.max_size() << std::endl;
+	vector_print_it(tata);
+
+	tata.resize(5);
+	vector_print_it(tata);
+
+	tata.resize(8);
+	vector_print_it(tata);
+
+	tata.resize(11, 666);
+	vector_print_it(tata);
+
+	for (size_t i = 0;i < tata.size();i++)
+		std::cout << i << " -> " << tata[i] << " | " << tata.at(i) << std::endl;
+	try
+	{
+		tata.at(11);
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+
+	std::cout << "front: " << tata.front() << std::endl <<
+					"back: " << tata.back() << std::endl << std::endl;
+
+	toto.assign(5, 6);
+	vector_print_it(toto);
+
+	toto.assign(15, 60);
+	vector_print_it(toto);
+
+	toto.assign(tata.begin(), tata.end());
+	vector_print_it(toto);
+
+	toto.pop_back();
+	toto.pop_back();
+	toto.pop_back();
+	toto.pop_back();
+	toto.pop_back();
+	vector_print_it(toto);
+
+	for (int i = -42;i < -30;i++)
+		toto.push_back(i);
+	vector_print_it(toto);
+
+	while (toto.size() > 0)
+		toto.pop_back();
+	for (int i = 0;i < 10;i++)
+		toto.push_back(i);
+	NAMESPACE::vector<int>::iterator it;
+	it = toto.begin();
+	it += 4;
+	std::cout << "it: " << *it << std::endl;
+	std::cout << "it: " << *(toto.insert(it, 80)) << std::endl;
+	std::cout << "it: " << *(toto.insert(toto.end(), 80)) << std::endl;
+	vector_print_it(toto);
+
+	toto.insert(toto.end(), 10, 42);
+	vector_print_it(toto);
+
+	it = toto.begin();
+	it += 5;
+	toto.insert(it, 5, -666);
+	vector_print_it(toto);
+
+	it = toto.begin();
+	it += 6;
+	toto.insert(it, tata.begin(), tata.end());
+	vector_print_it(toto);
+
+	it = toto.begin();
+	it += 2;
+	std::cout << *(toto.erase(it)) << std::endl;
+	vector_print_it(toto);
+
+	toto.push_back(5);
+	toto.push_back(6);
+	toto.push_back(7);
+
+	std::cout << *(toto.erase(toto.end() - 1)) << std::endl;
+	std::cout << "end() is: " << *(toto.end()) << std::endl;
+	vector_print_it(toto);
+
+	std::cout << *(toto.erase(toto.begin() + 10, toto.end() - 5)) << std::endl;
+	vector_print_it(toto);
+
+	std::cout << *(toto.erase(toto.end() - 6, toto.end() - 1)) << std::endl;
+	vector_print_it(toto);
+
+	toto.swap(tata);
+	vector_print_it(toto);
+	vector_print_it(tata);
+
+	std::cout << "toto == tata: " << (toto == tata) << " != " << (toto != tata) << std::endl;
+	std::cout << "toto == toto: " << (toto == toto) << " != " << (toto != toto) << std::endl;
+	std::cout << "tata == tata: " << (tata == tata) << " != " << (tata != tata) << std::endl;
+
+	std::cout << "toto < tata: " << (toto < tata) << std::endl;
+	std::cout << "toto > tata: " << (toto > toto) << std::endl;
+	std::cout << "toto <= toto: " << (toto <= toto) << std::endl;
+	std::cout << "toto >= toto: " << (toto >= toto) << std::endl;
+
+	toto.clear();
+	tata.clear();
+	vector_print_it(toto);
+	vector_print_it(tata);
+}
+
+template <typename T>
+static void map_print_it(T& toto)
+{
+	typename T::iterator it;
+	typename T::reverse_iterator itr;
+
+	it = toto.begin();
+	itr = toto.rbegin();
+	for (;it != toto.end();it++, itr++)
+		std::cout << "  iterator " << it->first << "|" << it->second << " - " << itr->first << "|" << itr->second << std::endl;
+
+	std::cout << std::endl;
+	std::cout << "    size() " << toto.size() << std::endl;
+	std::cout << "   empty() " << toto.empty() << std::endl;
+	std::cout << std::endl;
 	std::cout << std::endl;
 }
 
-std::string exec(const char* cmd) {
-	char buffer[128];
-	std::string result = "";
-	FILE* pipe = popen(cmd, "r");
-	if (!pipe) throw std::runtime_error("popen() failed!");
-	try {
-		while (fgets(buffer, sizeof buffer, pipe) != NULL) {
-			result += buffer;
-		}
-	} catch (...) { pclose(pipe); throw; }
-	pclose(pipe);
-	return result;
+template <typename T>
+static void map_print_op(T& toto)
+{
+	std::cout << " http: " << toto["http"] << std::endl;
+	std::cout << "https: " << toto["https"] << std::endl;
+	std::cout << "  ssh: " << toto["ssh"] << std::endl;
+	std::cout << "ecole: " << toto["ecole"] << std::endl;
+	std::cout << std::endl << std::endl;
 }
 
-template<class V, class Y>
-void temp(ft::map<V, Y> m1)
+void main_map(void)
 {
-	std::cerr << "22\n";
-	(void)m1;
-	(void)m1;
-	std::cerr << "33\n";
-	// ft::map<int, int> m7;
-	std::cerr << "44\n";
-}
+	NAMESPACE::map<std::string, int>	toto;
 
-int main()
-{
-	{
-		std::vector<std::pair<int, int> > vec;
-		vec.push_back(std::make_pair(16, 3));
-		vec.push_back(std::make_pair(17, 3));
-		vec.push_back(std::make_pair(18, 3));
-		
-		std::map<int, int> m1;
-		m1.insert(vec.begin(), vec.end());
-		// m1.insert(ft::make_pair(16, 3));
-		// m1.insert(ft::make_pair(17, 3));
-		// m1.insert(ft::make_pair(18, 3));
-
-		std::map<int, int> m2;
-		m2.insert(std::make_pair(16, 3));
-		m2.insert(std::make_pair(17, 3));
-
-		std::cout << "m1.size = " << m1.size() << " m2.size = " << m2.size() << std::endl; 
-		std::cout << "operator== test = " << (m1 == m2) << std::endl;
-	}
-
-	{
-		ft::map<int, int> m1;
-		// ft::map<int, int> m2;
-		// ft::map<int, int> m3;
-		// ft::map<int, int> m4;
-		// ft::map<int, int> m5;
-		// ft::map<int, int> m6;
-		std::cerr << "11\n";
-		temp(m1);
-		std::cerr << "55\n";
-	}
-
-
-	{
-		std::string a = "leaks --noContent ";
-		a += std::to_string(static_cast<int>(getpid()));
-		usleep(50);
-		std::string s = (exec(a.c_str()));
-		std::cout << s << std::endl;
-	}
-	// {
-	// 	ft::vector<int *> temp;
-		
-
-	// 	std::unique_ptr<void *> k2;
-
-	// 	ft::vector<int> A;
-
-	// 	size_t peta = 100000000;
-	// 	while (1)
-	// 		A.reserve((peta *= 2));
-	// 	// temp.push_back(&(*k2));
-	// 	// temp.push_back(A);
-	// 	// temp.push_back(2);
-
-	// 	// std::cout << *temp.begin() << std::endl;
-	// 	temp.begin();
-
-		
-
-	// 	temp.assign(temp.end(), temp.begin());
-	// 	// temp.reserve(87356768734699756);
-	// 	// temp.at(5);
-	// 	// temp.front();
-	// 	// temp.back();
-	// }
-	// {
-
-
-
-	// 	std::vector<int>	assignvec(5, 1);
-
-	// 	std::vector<int>	assignvec2(6, 2);
-
-	// 	// assignvec2.at(9);
-
-	// 	print_vec(assignvec);
-
-	// 	assignvec.assign(assignvec2.begin(), assignvec2.end());
-
-	// 	print_vec(assignvec);
-
-
-
-
-
-	// 	std::vector<int>	tvec;
-
-	// 	std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
-	// 	tvec.push_back(1);
-	// 	std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
-	// 	tvec.resize(24, 1);
-	// 	std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
-	// 	tvec.resize(12, 2);
-	// 	std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
-	// 	tvec.reserve(100);
-	// 	std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
-	// 	tvec.reserve(10);
-	// 	std::cout << "capacity = " << tvec.capacity() << " size = " << tvec.size() << std::endl;
-		
-	// 	ptrdiff_t dist = std::distance(tvec.end(), tvec.begin());
-
-	// 	std::cout << "distance = " << dist << std::endl;
-
-	// 	std::vector<int> tvec2(tvec.begin(), tvec.begin() + 1);
-
-	// 	std::vector<int>::iterator first = tvec.begin();
-	// 	std::vector<int>::iterator last = tvec.end();
-
-	// 	std::cout << "capacity2 = " << tvec2.capacity() << " size2 = " << tvec2.size() << std::endl;
-	// 	ft::vector<int> tempvec(tvec.begin(), tvec.end());
-	// 	std::cout << "capacity2 = " << tempvec.capacity() << " size2 = " << tempvec.size() << std::endl;
-
-	// 	size_t dist2 = std::distance(first, last);
-
-	// 	size_t i = 0;
-	// 	for (; i < dist2 && first != last; ++first, ++i) {}
-	// 	std::cout << "result = " << (i == dist2) << std::endl;
-	// 	std::cout << "distance2 = " << dist2 << std::endl;
-
-
-	// 	std::cout << "capacity = " << tvec2.capacity() << " size = " << tvec2.size() << std::endl;
-
-	// 	std::vector<int>	ovec(4, 6);
-	// 	std::vector<int>	ovec2(ovec.begin(), ovec.end());
-	// 	ft::vector<int>		myvec(ovec.begin(), ovec.end());
-	// 	ft::vector<int>		myvec2(myvec);
-
-
-	// 	std::vector<std::vector<int> >		ovec3;
-	// 	ft::vector<std::vector<int> >		myvec3;
-
-	// 	std::cout << typeid(std::vector<char>::size_type).name() << std::endl;
-	// 	std::cout << typeid(ft::vector<char>::size_type).name() << std::endl;
-	// 	std::cout << "max size: " << ovec.max_size() << std::endl;
-	// 	std::cout << "max size: " << ovec3.max_size() << std::endl;
-
-	// 	std::cout << "max size: " << myvec.max_size() << std::endl;
-	// 	std::cout << "max size: " << myvec3.max_size() << std::endl;
-		
-
-	// 	// ft::iterator<std::random_access_iterator_tag, int> it1;
-
-	// 	// std::iterator<std::random_access_iterator_tag, int> it2;
-
-	// 	//ft::vector<int>::iterator **it3;
-
-	// 	//static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>, ft::iterator_traits<ft::iterator<std::random_access_iterator_tag, int> >::iterator_category>::value, "temp");
-
-	// 	// test_reverse_iterator();
-	// 	// test_iterator_traits_categories();
-	// 	// test_iterator_constructors();
-
-	// 	// static_assert(std::is_same<ft::iterator<std::random_access_iterator_tag, int>::iterator_category, std::iterator<std::random_access_iterator_tag, int>::iterator_category>::value, "failed iterator_category");
-
-	// 	// // ft::vector<int>::iterator *it;
-	// 	// // ft::iterator_traits<ft::vector<int>::iterator>::iterator_category temp;
-	// 	// //static_assert(std::is_same_v<ft::iterator_traits<ft::vector<int>::iterator>::iterator_category, std::random_access_iterator_tag>>);
-	// 	// static_assert(std::is_same<ft::iterator_traits<ft::iterator<std::random_access_iterator_tag, int> >::iterator_category, std::random_access_iterator_tag>::value, "failed iterator_category");
-	// 	// static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>::difference_type, ptrdiff_t>::value, "failed difference_type");
-	// 	//static_assert(std::is_same<ft::iterator_traits<ft::vector<int>::iterator>::value_type, int>::value, "failed difference_type");
-
-	// 	//ft::iterator<ft::vector<int>, int > it900;
-	// 	// std::iterator<std::vector<int> , int > it5;
-	// 	// std::iterator<
-	// 	// ft::iterator<
-	// 	test_iterator();
-	// 	//test_iterator_0b();
-		
-	// 	//std::vector<int>::iterator temp = myvec2.begin();
-
-	// 	// for (; temp != myvec2.end(); *temp++)
-	// 	// 	std::cerr << *temp << std::endl;
-
-	// 	std::cout << ovec2[0] << std::endl;
-	// 	ovec2[0] = 9;
-	// 	std::cout << ovec[0] << std::endl;
-	// }
-	// //system("leaks exec");
-	return 0;
-}
-
-
-
-int	test_iterator()
-{
-
-	// std::vector<int> container0 {1, 2, 3, 4, 5, 6, 7, 8, 9};
-	// std::vector<int> container1 {1, 2, 3, 4, 5, 6, 7, 8, 9};
-
-	//std::iterator<std::vector<int>, int> it0;
-	//it0 = container0.begin();
-
-	// std::vector<int>::iterator it0 = container0.begin();
-	//std::vector<int>::ft::iterator 
-
-
-	// (void)it0;
-	//(void)it1;
-	std::cout << "Default constructor test:" << std::endl;
-	{
-		//it0.begin();
-		//assert(it0 == it2);
-	}
-	std::cout << "Pointer constructor test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Copy constructor test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Copy assignment operator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Dereference operator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Arrow operator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Pre-increment operator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Post-increment operator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Equality operator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Inequality operator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Less than operator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Random access test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Conversion to const iterator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Input iterator test:" << std::endl;
-	{
-		
-	}
-	std::cout << "Output iterator test:" << std::endl;
-	{
-		
-	}
+	std::cout << "   empty() " << toto.empty() << std::endl;
+	std::cout << "    size() " << toto.size() << std::endl;
+	std::cout << "max_size() " << toto.max_size() << std::endl;
 	
-	
+	std::cout << "---1" << std::endl;
+	map_print_it(toto);
+	toto.insert(NAMESPACE::pair<std::string, int>("ecole", 42));
+	map_print_it(toto);
+	toto.insert(NAMESPACE::pair<std::string, int>("truc", 1));
+	toto.insert(NAMESPACE::pair<std::string, int>("trac", 66));
+	toto.insert(NAMESPACE::pair<std::string, int>("hexa", 666));
+	toto.insert(NAMESPACE::pair<std::string, int>("ssh", 22));
+	toto.insert(NAMESPACE::pair<std::string, int>("http", 80));
+	toto.insert(NAMESPACE::pair<std::string, int>("https", 443));
+	map_print_it(toto);
 
-	//MyContainer<int>::iterator it;
+	std::cout << "---2" << std::endl;
+	toto.erase("ecole");
+	map_print_op(toto);
 
-	return 0;
+	std::cout << "---3" << std::endl;
+	NAMESPACE::map<std::string, int>	tata(toto);
+	map_print_it(tata);
+
+	std::cout << "---4" << std::endl;
+	tata.clear();
+	map_print_it(tata);
+	map_print_it(toto);
+
+	std::cout << "---5" << std::endl;
+	tata.swap(toto);
+	map_print_it(tata);
+	map_print_it(toto);
+
+	std::cout << "---6" << std::endl;
+	toto.insert(tata.begin(), tata.end());
+	map_print_it(tata);
 }
 
-// int	test_iterator_0b()
-// {
-// 	std::vector<int>::iterator it;
-// 	//std::iterator<std::vector<int> >  it;
-// 	std::cout << it.base() << std::endl;
-// 	it++;
-// 	std::cout << it.base() << std::endl;
+template <typename T>
+void stack_print_info(T& toto)
+{
+	std::cout << "empty(): " << toto.empty() << std::endl;
+	std::cout << " size(): " << toto.size() << std::endl;
+	if (toto.size() > 0)
+		std::cout << "  top(): " << toto.top() << std::endl;
+	std::cout << std::endl << std::endl;
+}
 
-// 	return 0;
-// }
+void main_stack(void)
+{
+	NAMESPACE::stack<int>	toto;
 
+	std::cout << "---1" << std::endl;
+	stack_print_info(toto);
+
+	std::cout << "---2" << std::endl;
+	for(size_t i = 0;i < 42;i++)
+		toto.push(i);
+	stack_print_info(toto);
+
+	std::cout << "---3" << std::endl;
+	for(size_t i = 0;i < 21;i++)
+		toto.pop();
+	stack_print_info(toto);
+}
+
+template <typename T>
+static void set_print_it(T& toto)
+{
+	typename T::iterator it;
+	typename T::reverse_iterator itr;
+
+	it = toto.begin();
+	itr = toto.rbegin();
+	for (;it != toto.end();it++, itr++)
+		std::cout << "  iterator " << *it << " - " << *itr << std::endl;
+
+	std::cout << std::endl;
+	std::cout << "    size() " << toto.size() << std::endl;
+	std::cout << "   empty() " << toto.empty() << std::endl;
+	std::cout << std::endl << std::endl;
+}
+
+int main(void)
+{
+	#ifdef FT
+		#define NAMESPACE ft
+		std::cout << "\nEXECUTING TESTS WITH NAMESPACE = ft " << std::endl;
+	#else
+		std::cout << "\nEXECUTING TESTS WITH NAMESPACE = std " << std::endl;
+	#endif
+
+	std::cout << "===== VECTOR =====" << std::endl;
+	main_vector();
+	std::cout << std::endl;
+
+	std::cout << "===== MAP =====" << std::endl;
+	main_map();
+	std::cout << std::endl;
+
+	std::cout << "===== STACK =====" << std::endl;
+	main_stack();
+	std::cout << std::endl;
+}
